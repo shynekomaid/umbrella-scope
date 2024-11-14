@@ -11,8 +11,8 @@ if (basename(__FILE__) === basename($_SERVER["SCRIPT_FILENAME"])) {
 // Enabled debug can brake page render and API response!!!
 define("debug", false);
 define("remote_domain", "https://crm.belmar.pro");
-define("box_id", 28);
-define("offer_id", 5);
+define("box_id", "28");
+define("offer_id", "5");
 define("countryCode", "GB");
 define("language", "en");
 define("password", "qwerty12");
@@ -69,27 +69,42 @@ function getPostJson()
 }
 
 /**
- * Send HTTP request with proxy
- * @param string $method request method
- * @param string $url request URL
- * @param array|null $headers request headers
- * @return string response
+ * Sends an HTTP request to a specified URL.
+ *
+ * This function supports both GET and POST methods. For POST requests,
+ * it allows sending data either as URL-encoded form data or as JSON,
+ * based on the $postIsQuery parameter. Custom headers can be included
+ * in the request.
+ *
+ * @param string $method The HTTP method to use for the request, e.g., "GET" or "POST".
+ * @param string $url The endpoint URL to which the request is sent.
+ * @param mixed|null $bodyReq The request body data, either as an associative array or object.
+ * @param array|null $headers An array of additional headers to include in the request.
+ * @param bool $postIsQuery Specifies whether to send POST data as URL-encoded (true) or JSON (false).
+ *
+ * @return string The response from the server.
  */
 function sendHTTPrequest(
     $method,
     $url,
     $bodyReq = null,
-    $headers = null
+    $headers = null,
+    $postIsQuery = false
 ) {
     if ($method === "POST") {
         $options = [
             "http" => [
-                "header" => "Content-type: application/x-www-form-urlencoded\r\n",
                 "method" => "POST",
             ],
         ];
         if ($bodyReq !== null) {
-            $options["http"]["content"] = http_build_query($bodyReq);
+            if ($postIsQuery) {
+                $options["http"]["header"] .= "Content-type: application/x-www-form-urlencoded\r\n";
+                $options["http"]["content"] = http_build_query($bodyReq);
+            } else {
+                $options["http"]["header"] .= "Content-type: application/json\r\n";
+                $options["http"]["content"] = encodeJsonForRequest($bodyReq);
+            }
         }
         if ($headers !== null) {
             $options["http"]["header"] .= implode("\r\n", $headers);
