@@ -27,33 +27,35 @@
         </div>
     </nav>
     <div class="container mt-4">
-        <div class="card text-center shadow-lg">
-            <div class="card-header">
-                <h1 class="mb-0" tr="add_lead" class="card-title"></h1>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-xl-4">
+                <div class="card text-center shadow-lg">
+                    <div class="card-header">
+                        <h1 class="mb-0" tr="add_lead" class="card-title"></h1>
+                    </div>
+                    <div class="card-body">
+                        <form id="add_lead_form">
+                            <div class="form-floating mb-3">
+                                <input type="text" placeholder="" required class="form-control" id="firstName">
+                                <label for="firstName" tr="add_lead_first_name"></label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="text" placeholder="" required class="form-control" id="lastName">
+                                <label for="lastName" tr="add_lead_last_name"></label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="tel" placeholder="" required class="form-control" id="phone">
+                                <label for="phone" tr="add_lead_phone"></label>
+                            </div>
+                            <div class="form-floating mb-4">
+                                <input type="email" placeholder="" required class="form-control" id="email">
+                                <label for="email" tr="add_lead_email"></label>
+                            </div>
+                            <button id="add_lead" tr="submit" class="btn btn-primary w-100"></button>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="card-body">
-                <!-- form with required fields firstName, lastName, phone, email  -->
-                <form id="add_lead_form">
-                    <div class="form-floating mb-3">
-                        <input type="text" placeholder="" required class="form-control" id="firstName">
-                        <label for="firstName" tr="add_lead_first_name"></label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="text" placeholder="" required class="form-control" id="lastName">
-                        <label for="lastName" tr="add_lead_last_name"></label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="tel" placeholder="" required class="form-control" id="phone">
-                        <label for="phone" tr="add_lead_phone"></label>
-                    </div>
-                    <div class="form-floating mb-4">
-                        <input type="email" placeholder="" required class="form-control" id="email">
-                        <label for="email" tr="add_lead_email"></label>
-                    </div>
-                    <button id="add_lead" tr="submit" class="btn btn-primary w-100"></button>
-                </form>
-            </div>
-
         </div>
     </div>
     <div id="toaster"></div>

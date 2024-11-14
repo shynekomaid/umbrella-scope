@@ -8,6 +8,20 @@
   "add_lead_last_name": "Last name",
   "add_lead_phone": "Phone",
   "add_lead_title": "Add lead",
-  "lead_list": "Get lead",
-  "submit": "Submit"
+  "date_from_label": "Date From",
+  "date_to_label": "Date To",
+  "error_add_lead": "Error while adding lead",
+  "error_get_lead": "Error while receive statuses",
+  "lead_added": "Lead added!",
+  "lead_list": "Get statuses",
+  "no_data": "No data available",
+  "page_label": "Page",
+  "receive": "Receive",
+  "result": "Result",
+  "statuses": "Statuses",
+  "submit": "Submit",
+  "t_email": "Email",
+  "t_ftd": "First time deposit",
+  "t_id": "ID",
+  "t_status": "Status"
 }

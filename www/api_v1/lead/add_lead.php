@@ -29,7 +29,7 @@ $result = addLead(
 );
 
 if ($result[0]) {
-    returnJson($result[1], "none");
+    returnJson();
 } else {
-    returnJson(null, $result[1]);
+    returnJson($result[1], "serverReturnError");
 }

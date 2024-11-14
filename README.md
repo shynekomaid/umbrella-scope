@@ -12,6 +12,11 @@ This repo hold stuff and code for test project
     - [Prerequisites](#prerequisites)
     - [Dependencies](#dependencies)
       - [Nginx](#nginx)
+      - [PHP](#php)
+      - [Move Files](#move-files)
+    - [VSCode Extensions](#vscode-extensions)
+    - [Secure Backup of .env Files](#secure-backup-of-env-files)
+    - [Config SFTP Extention](#config-sftp-extention)
 
 ## Deployment
 
@@ -50,7 +55,7 @@ Move the Nginx configuration file from nginx folder in repo.
 
 Enable Nginx configuration:
 
-````bash
+```bash
 sudo ln -s /etc/nginx/sites-available/umbrella-scope /etc/nginx/sites-enabled/umbrella-scope
 ```
 
@@ -99,4 +104,3 @@ Read this [file](/docs/development/secured_env.md) for more info.
 ### Config SFTP Extention
 
 Read this [file](/docs/development/sftp.md) for more info.
-````

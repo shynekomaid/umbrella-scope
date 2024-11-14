@@ -9,10 +9,10 @@ if (basename(__FILE__) === basename($_SERVER["SCRIPT_FILENAME"])) {
 
 // Determinate that debug mode is on or off
 // Enabled debug can brake page render and API response!!!
-define("debug", false);
+define("debug", true);
 define("remote_domain", "https://crm.belmar.pro");
-define("box_id", "28");
-define("offer_id", "5");
+define("box_id", 28);
+define("offer_id", 5);
 define("countryCode", "GB");
 define("language", "en");
 define("password", "qwerty12");
@@ -35,8 +35,17 @@ if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
     $userIp = $_SERVER["REMOTE_ADDR"];
 }
 
-$protocol = (!empty($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] !== "off" || $_SERVER["SERVER_PORT"] == 443) ? "https://" : "http://";
+$protocol = (
+    !empty($_SERVER["HTTPS"]) &&
+    $_SERVER["HTTPS"] !== "off" ||
+    $_SERVER["SERVER_PORT"] == 443
+) ?
+    "https://" :
+    "http://";
+
+
 $host = $_SERVER["HTTP_HOST"];
+
 $serverURL = $protocol . $host;
 
 
@@ -56,6 +65,7 @@ function returnJson($data = null, $error = "none")
     } else {
         echo json_encode(["error" => $error], JSON_UNESCAPED_UNICODE);
     }
+    exit();
 }
 
 /**
@@ -99,14 +109,14 @@ function sendHTTPrequest(
         ];
         if ($bodyReq !== null) {
             if ($postIsQuery) {
-                $options["http"]["header"] .= "Content-type: application/x-www-form-urlencoded\r\n";
+                $options["http"]["header"] = "Content-type: application/x-www-form-urlencoded\r\n";
                 $options["http"]["content"] = http_build_query($bodyReq);
             } else {
-                $options["http"]["header"] .= "Content-type: application/json\r\n";
+                $options["http"]["header"] = "Content-type: application/json\r\n";
                 $options["http"]["content"] = encodeJsonForRequest($bodyReq);
             }
         }
-        if ($headers !== null) {
+        if ($headers !== null && is_array($headers)) {
             $options["http"]["header"] .= implode("\r\n", $headers);
         }
         $context = stream_context_create($options);
@@ -139,6 +149,23 @@ function encodeJsonForRequest($data)
 }
 
 
+/**
+ * Adds a lead to the Bitrek CRM.
+ *
+ * This function takes four parameters for the lead's first name, last name,
+ * phone number, and email address. It makes a POST request to the Bitrek CRM
+ * API with the supplied data, and returns an array containing a boolean
+ * indicating whether the request was successful, and an array with the lead's
+ * ID, email address, and autologin string if the request was successful.
+ *
+ * @param string $firstName The lead's first name.
+ * @param string $lastName The lead's last name.
+ * @param string $phone The lead's phone number.
+ * @param string $email The lead's email address.
+ * @return array An array containing a boolean indicating whether the request
+ *               was successful, and an array with the lead's ID, email address,
+ *               and autologin string if the request was successful.
+ */
 function addLead($firstName, $lastName, $phone, $email)
 {
     global $serverURL, $userIp;
@@ -152,46 +179,24 @@ function addLead($firstName, $lastName, $phone, $email)
             "lastName" => $lastName,
             "phone" => $phone,
             "email" => $email,
-            "countryCode" => countryCode,
-            "language" => language,
             "box_id" => box_id,
+            "countryCode" => countryCode,
             "offer_id" => offer_id,
+            "landingUrl" => $serverURL,
+            "ip" => $userIp,
+            "password" => password,
+            "language" => language,
             "clickId" => "",
             "quizAnswers" => "",
             "custom1" => "",
             "custom2" => "",
-            "custom3" => "",
-
-            "ip" => $userIp,
-            "landingUrl" => $serverURL
+            "custom3" => ""
         ],
         [
             "token: " . token
         ]
     );
-    var_dump(
-        [
-            "firstName" => $firstName,
-            "lastName" => $lastName,
-            "phone" => $phone,
-            "email" => $email,
-            "countryCode" => countryCode,
-            "language" => language,
-            "box_id" => box_id,
-            "offer_id" => offer_id,
-            "clickId" => "",
-            "quizAnswers" => "",
-            "custom1" => "",
-            "custom2" => "",
-            "custom3" => "",
 
-            "ip" => $userIp,
-            "landingUrl" => $serverURL
-        ],
-        [
-            "token: " . token
-        ]
-    );
     $decoded = json_decode($response, true);
     if ($decoded === null) {
         return [false, "json_decode_error"];
@@ -199,5 +204,57 @@ function addLead($firstName, $lastName, $phone, $email)
     if (!is_array($decoded)) {
         return [false, "no_result"];
     }
-    return [true, $decoded];
+
+    if ((bool)$decoded["status"] === true) {
+        return [
+            true,
+            [
+                "id" => @$decoded["id"],
+                "email" => @$decoded["email"],
+                "autologin" => @$decoded["autologin"]
+            ]
+        ];
+    } else {
+        return [false, $decoded["error"]];
+    }
+}
+
+function getLead($start, $end, $page, $limit)
+{
+    $domain = remote_domain;
+    $remoteUrl = $domain . "/api/v1/getstatuses";
+    $response = sendHTTPrequest(
+        "POST",
+        $remoteUrl,
+        [
+            "date_from" => $start,
+            "date_to" => $end,
+            "page" => $page,
+            "limit" => $limit,
+        ],
+        [
+            "token: " . token
+        ]
+    );
+
+    $decoded = json_decode($response, true);
+    if ($decoded === null) {
+        return [false, "json_decode_error"];
+    }
+    if (!is_array($decoded)) {
+        return [false, "no_result"];
+    }
+
+    if ((bool)$decoded["status"] === true) {
+        $page = @(int)$decoded["page"] ?? 0;
+        $page++; // Human page for js
+        return [
+            true,
+            @$decoded["data"] ?? [],
+            $page,
+            @$decoded["limit"]
+        ];
+    } else {
+        return [false, @$decoded["error"] ?? "serverReturnError"];
+    }
 }
