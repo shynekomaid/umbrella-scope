@@ -37,8 +37,7 @@ if (!empty($_SERVER["HTTP_CLIENT_IP"])) {
 
 $protocol = (!empty($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] !== "off" || $_SERVER["SERVER_PORT"] == 443) ? "https://" : "http://";
 $host = $_SERVER["HTTP_HOST"];
-$requestUri = $_SERVER["REQUEST_URI"];
-$serverURL = $protocol . $host . $requestUri;
+$serverURL = $protocol . $host;
 
 
 /**
@@ -133,6 +132,29 @@ function addLead($firstName, $lastName, $phone, $email)
     $response = sendHTTPrequest(
         "POST",
         $remoteUrl,
+        [
+            "firstName" => $firstName,
+            "lastName" => $lastName,
+            "phone" => $phone,
+            "email" => $email,
+            "countryCode" => countryCode,
+            "language" => language,
+            "box_id" => box_id,
+            "offer_id" => offer_id,
+            "clickId" => "",
+            "quizAnswers" => "",
+            "custom1" => "",
+            "custom2" => "",
+            "custom3" => "",
+
+            "ip" => $userIp,
+            "landingUrl" => $serverURL
+        ],
+        [
+            "token: " . token
+        ]
+    );
+    var_dump(
         [
             "firstName" => $firstName,
             "lastName" => $lastName,
