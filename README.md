@@ -52,7 +52,7 @@ Enable Nginx configuration:
 
 ````bash
 sudo ln -s /etc/nginx/sites-available/umbrella-scope /etc/nginx/sites-enabled/umbrella-scope
-
+```
 
 #### PHP
 
