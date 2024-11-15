@@ -30,22 +30,46 @@ const dateToEl = document.getElementById("date_to");
 const dateFromEl = document.getElementById("date_from");
 
 if (dateToEl && dateFromEl) {
-  // Set `dateToEl` value to the current date and time in the required format
-  dateToEl.value = new Date().toISOString().slice(0, 16);
+  const locale = navigator.language || "en-US"; // Get user's locale or default to 'en-US'
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  };
 
-  // Set `dateFromEl` value to 30 days before the current date and time
-  dateFromEl.value = new Date(new Date().getTime() - 30 * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 16);
+  /**
+   * Format a Date object into a string like '2024-10-15T19:11'
+   * @param {Date} date - The date to format
+   * @returns {string} The formatted date string
+   */
+  const formatDate = (date) => {
+    const [day, month, year, hour, minute] = new Intl.DateTimeFormat(
+      locale,
+      options
+    )
+      .formatToParts(date)
+      .reduce((acc, part) => {
+        if (part.type !== "literal") acc.push(part.value);
+        return acc;
+      }, []);
+    return `${year}-${month}-${day}T${hour}:${minute}`;
+  };
 
-  // Set minimum dates for `dateToEl` and `dateFromEl` to 60 days and 10 minutes before the current date
+  const now = new Date();
+  // 30 days before in ms
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+  // 60 days and 10m before in ms
   const minDate = new Date(
-    new Date().getTime() - 60 * 24 * 60 * 60 * 1000 - 10 * 60 * 1000
-  )
-    .toISOString()
-    .slice(0, 16);
-  dateToEl.min = minDate;
-  dateFromEl.min = minDate;
+    now.getTime() - 60 * 24 * 60 * 60 * 1000 - 10 * 60 * 1000
+  );
+
+  dateToEl.value = formatDate(now);
+  dateFromEl.value = formatDate(thirtyDaysAgo);
+
+  dateToEl.min = formatDate(minDate);
+  dateFromEl.min = formatDate(minDate);
 }
 
 // function langInited() {} Called when lang files received.
