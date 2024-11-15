@@ -46,8 +46,6 @@ if ($page < 1) {
 
 $page--; // Human page for js
 
-
-
 $result = getLead($input["dateFrom"], $input["dateTo"], $page, $limit);
 
 if ($result[0]) {

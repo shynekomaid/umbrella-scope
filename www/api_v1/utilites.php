@@ -9,7 +9,7 @@ if (basename(__FILE__) === basename($_SERVER["SCRIPT_FILENAME"])) {
 
 // Determinate that debug mode is on or off
 // Enabled debug can brake page render and API response!!!
-define("debug", true);
+define("debug", false);
 define("remote_domain", "https://crm.belmar.pro");
 define("box_id", 28);
 define("offer_id", 5);

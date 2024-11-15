@@ -1,11 +1,7 @@
 <?php
 
-ini_set("error_reporting", E_ALL);
-ini_set("display_errors", 1);
-ini_set("display_startup_errors", 1);
-
-define('DIR', __DIR__);
-ini_set('default_socket_timeout', 29);
+define("DIR", __DIR__);
+ini_set("default_socket_timeout", 29);
 
 require_once(DIR . "/api_v1/utilites.php");
 

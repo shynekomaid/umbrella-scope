@@ -14,7 +14,9 @@ let trOptions = {
   lang: localStorage.getItem("lang") || window.navigator.language.slice(0, 2),
 };
 
+// Ukrainian is DEFAULT language for users from Belarus and Russia ^_^
 if (trOptions.lang === "be" || trOptions.lang === "ru") trOptions.lang = "uk";
+// Othervise, if user language not found - used English
 else if (supportedLanguages.indexOf(trOptions.lang) < 0) trOptions.lang = "en";
 
 /**
@@ -57,6 +59,7 @@ function setLang() {
     else if (trOptions.insertAttrName)
       el.setAttribute("placeholder", targetAttr);
   });
+  // Called langInited() if exist, when complete
   if (typeof langInited === typeof Function) langInited();
 }
 

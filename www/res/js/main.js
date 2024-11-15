@@ -48,8 +48,7 @@ if (dateToEl && dateFromEl) {
   dateFromEl.min = minDate;
 }
 
-// function langInited() { When lang received.
-// }
+// function langInited() {} Called when lang files received.
 
 const addLeadBtn = document.getElementById("add_lead");
 
@@ -59,7 +58,6 @@ if (addLeadBtn) {
     const lastName = document.getElementById("lastName").value;
     const phone = document.getElementById("phone").value;
     const email = document.getElementById("email").value;
-    // check if form valid
     const form = document.getElementById("add_lead_form");
     if (!form.checkValidity()) {
       return;
