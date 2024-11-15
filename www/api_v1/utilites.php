@@ -219,6 +219,22 @@ function addLead($firstName, $lastName, $phone, $email)
     }
 }
 
+/**
+ * Retrieves lead statuses from the remote CRM.
+ *
+ * This function sends a POST request to the CRM API to retrieve lead statuses
+ * within a specified date range and pagination information. The function returns
+ * an array indicating the success status of the request, the retrieved data, and
+ * pagination details if successful. In case of an error, it returns an error message.
+ *
+ * @param string $start The start date for retrieving statuses.
+ * @param string $end The end date for retrieving statuses.
+ * @param int $page The page number for paginated data.
+ * @param int $limit The maximum number of records per page.
+ * @return array An array containing a boolean indicating success, an array of
+ *               data if successful, the current page number, and the limit of records per page.
+ *               If unsuccessful, it returns a boolean and an error message.
+ */
 function getLead($start, $end, $page, $limit)
 {
     $domain = remote_domain;

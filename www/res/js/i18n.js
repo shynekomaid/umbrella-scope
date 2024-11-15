@@ -17,10 +17,26 @@ let trOptions = {
 if (trOptions.lang === "be" || trOptions.lang === "ru") trOptions.lang = "uk";
 else if (supportedLanguages.indexOf(trOptions.lang) < 0) trOptions.lang = "en";
 
+/**
+ * Construct a full path to a JSON file containing translations
+ * @param {string} lang - Two-letter language code
+ * @param {string} basePath - Base path to the directory containing translation files
+ * @returns {string} Full path to the JSON translation file
+ */
 function buildFullPath(lang, basePath) {
   return basePath + lang + ".json";
 }
 
+/**
+ * Updates the innerHTML or attributes of DOM elements based on the current language settings.
+ *
+ * This function iterates over elements that match the specified selectors in `trOptions`.
+ * It updates their content or attributes (`innerHTML`, `title`, `placeholder`) using
+ * translations from the `LANG` object. If a translation is not found, it may use the
+ * attribute name itself as a fallback if `insertAttrName` is true.
+ *
+ * Additionally, if a `langInited` function is defined, it will be called after the updates.
+ */
 function setLang() {
   document.querySelectorAll(trOptions.targetSelector).forEach((el) => {
     const targetAttr = el.getAttribute(trOptions.targetSelectorAttr);
@@ -44,6 +60,13 @@ function setLang() {
   if (typeof langInited === typeof Function) langInited();
 }
 
+/**
+ * Loads translations for the current language from a JSON file.
+ * If the current language is not the same as the fallback language,
+ * it will also load the fallback language translations and merge them
+ * into the main `LANG` object.
+ * Finally, it calls `setLang()` to apply the translations to the page.
+ */
 function getLang() {
   const xhr = new XMLHttpRequest();
   xhr.addEventListener("readystatechange", function () {
@@ -70,6 +93,10 @@ function getLang() {
 
 document.addEventListener("DOMContentLoaded", langInit);
 
+/**
+ * Initializes language settings by constructing paths for the current and fallback languages.
+ * Uses these paths to load translations for the current language.
+ */
 function langInit() {
   trOptions.fullPath = buildFullPath(trOptions.lang, trOptions.basepath);
   trOptions.fallPath = buildFullPath(
